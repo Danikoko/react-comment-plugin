@@ -38,12 +38,12 @@ function Login({setUser}) {
             <form className="mt-2">
                 <div className="form-group">
                     <input value={email} style={ {width:'350px',border:'none'} } onChange={handleEmailInput} autoComplete="off"
-                        className="form-control mb-2" placeholder="Share your thought" id="email"
+                        className="form-control mb-2" placeholder="Enter e-mail address" id="email"
                         required />
                 </div>
                 <div className="form-group">
                     <input value={password} style={ {width:'350px',border:'none'} } onChange={handlePasswordInput} autoComplete="off"
-                        className="form-control mb-2" type="password" placeholder="Share your thought" id="password"
+                        className="form-control mb-2" type="password" placeholder="Enter password" id="password"
                         required />
                 </div>
                 <div className="send" id="send">

@@ -1,6 +1,6 @@
 .replies {
   overflow-y: scroll;
-  height: 400px;
+  height: 200px;
 }
 .boxShadowEl {
   box-shadow: rgb(0 0 0 / 12%) 0px 2px 8px;

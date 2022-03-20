@@ -4,6 +4,7 @@ import Comment from '../components/comment';
 
 function Post({setUser, user}) {
     const [comments, setComments] = useState([]);
+    const [replies, setReplies] = useState([]);
     const [post, setPost] = useState({});
     const [thoughts, setThoughts] = useState('');
     const [submitText, setSubmitText] = useState('Send');
@@ -32,6 +33,7 @@ function Post({setUser, user}) {
         .then(response => {
             setPost(response.data.posts[0]);
             setComments(response.data.comments);
+            setReplies(response.data.replies);
         })
         .catch(error => {
             console.log(error)
@@ -106,7 +108,7 @@ function Post({setUser, user}) {
                                         <form className="mt-2">
                                             <div className="form-group">
                                                 <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
-                                                    className="form-control mb-2" placeholder="Share your thought" id="message"
+                                                    className="form-control mb-2" placeholder="Share your thoughts" id="message"
                                                     required />
                                             </div>
                                             <div className="send" id="send">
@@ -137,7 +139,7 @@ function Post({setUser, user}) {
                                     <hr />
                                     <div style={ {width:'350px', padding:'10px'} }>
                                         {
-                                        postComments.map(c => <Comment key={c.id} content={c} deleteComment={handleDelete} user={user} />)
+                                        postComments.map(c => <Comment key={c.id} content={c} deleteComment={handleDelete} user={user} replies={replies} fetchPosts={fetchPosts} />)
                                         }
                                         {/* <div>
                                             <div className="top">

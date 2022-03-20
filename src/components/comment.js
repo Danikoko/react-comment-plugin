@@ -1,6 +1,22 @@
-import React, { useMemo } from 'react';
-function Comment({content, deleteComment, user}) {
+import axios from 'axios';
+import React, { useMemo, useState } from 'react';
+import Reply from './reply';
+function Comment({content, deleteComment, user, replies, fetchPosts}) {
     
+    const [replying, setReplying] = useState(false);
+    const [thoughts, setThoughts] = useState('');
+    const [submitText, setSubmitText] = useState('Send');
+
+    const handleInput = e => setThoughts(e.target.value);
+
+    const contentReplies = useMemo(() => {
+        let result = [];
+        result = replies.filter(r => {
+            return r.comment_id == content.id
+        });
+        return result;
+    }, [content, replies]);
+
     const timeStamp = useMemo(() => {
         let date = Date.parse(content.created_at);
         var seconds = Math.floor((new Date() - date) / 1000);
@@ -47,7 +63,27 @@ function Comment({content, deleteComment, user}) {
         } else {
             return false
         }
-    }, [content])
+    }, [content]);
+
+    const handleReply = () => {
+        setSubmitText('...');
+        axios.post('https://tests.tee-solutions.com/api/storereply', {
+            body: thoughts,
+            comment_id: content.id,
+            user_id: user.id
+        })
+        .then(() => {
+            alert('Reply saved succesfully');
+            setThoughts('');
+            fetchPosts();
+        })
+        .catch(error => {
+            console.log(error)
+        })
+        .then(() => {
+            setSubmitText('Send');
+        })
+    }
 
     return (
         <div>
@@ -89,9 +125,45 @@ function Comment({content, deleteComment, user}) {
                     <i className="fas fa-comment"></i> <span>Hide replies</span>
                 </div>
                 <div>
-                    <span>Reply</span>
+                    <span onClick={ () => setReplying(true) } style={ { cursor: 'pointer' } }>{ replying ? null : 'Reply' }</span>
                 </div>
             </div>
+            {
+                replying
+                ?
+                <div>
+                    <form className="mt-2">
+                        <div className="form-group">
+                            <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
+                                className="form-control mb-2" placeholder="Send a reply" id="message"
+                                required />
+                        </div>
+                        <div className="send" id="send">
+                            <div className="text">
+                                <i className="fa-solid fa-bold"></i>
+                                <i className="fa-solid fa-italic"></i>
+                            </div>
+                            <div className="btn">
+                                <a href="javascript:void(0);" onClick={ () => setReplying(false) }>Cancel</a>
+                                <button onClick={thoughts.length >= 1 ? handleReply : null} type="button" className="send-btn">{submitText}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                :
+                null
+            }
+            {
+                contentReplies.length
+                ?
+                <div className="replies">
+                    {
+                        contentReplies.map(reply => <Reply key={reply.id} reply={reply} user={user} fetchPosts={fetchPosts} />)
+                    }
+                </div>
+                :
+                null
+            }
             <hr />
         </div>
     );
