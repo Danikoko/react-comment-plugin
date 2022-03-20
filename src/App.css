@@ -75,7 +75,7 @@ body {
 
 .container {
   /* max-width: 1000px; */
-  width: 10%;
+  width: 15%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -341,4 +341,8 @@ h5 {
 .show-content {
   transition: ease 0.2s;
   opacity: 1;
+}
+
+input {
+  border: 2px solid grey !important;
 }
