@@ -13,7 +13,7 @@ function App() {
   const handleCancel = () => setThoughts('');
 
   const fetchPosts = () => {
-    axios.post('http://localhost:8000/api/fetchposts')
+    axios.post('https://tests.tee-solutions.com0/api/fetchposts')
     .then(response => {
       setPost(response.data.posts[0]);
       setComments(response.data.comments);
@@ -28,7 +28,7 @@ function App() {
 
   const handleSubmit = () => {
     setSubmitText('...');
-    axios.post('http://localhost:8000/api/storecomment', {
+    axios.post('https://tests.tee-solutions.com/api/storecomment', {
       body: thoughts,
       post_id: post.id,
       user_id: 1
