@@ -58,12 +58,12 @@ function Comment({content, deleteComment, user, replies, fetchPosts}) {
     }, [content]);
 
     const sevenDaysActive = useMemo(() => {
-        if ((new Date().getTime() - new Date(content.created_at).getTime()) >= 604800000) {
+        if ((new Date().getTime() - new Date(user.created_at).getTime()) >= 604800000) {
             return true;
         } else {
             return false
         }
-    }, [content]);
+    }, [user]);
 
     const handleReply = () => {
         setSubmitText('...');
@@ -124,31 +124,43 @@ function Comment({content, deleteComment, user, replies, fetchPosts}) {
                 <div>
                     <i className="fas fa-comment"></i> <span>Hide replies</span>
                 </div>
-                <div>
-                    <span onClick={ () => setReplying(true) } style={ { cursor: 'pointer' } }>{ replying ? null : 'Reply' }</span>
-                </div>
+                {
+                    sevenDaysActive
+                    ?
+                    <div>
+                        <span onClick={ () => setReplying(true) } style={ { cursor: 'pointer' } }>{ replying ? null : 'Reply' }</span>
+                    </div>
+                    :
+                    null
+                }
             </div>
             {
                 replying
                 ?
                 <div>
-                    <form className="mt-2">
-                        <div className="form-group">
-                            <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
-                                className="form-control mb-2" placeholder="Send a reply" id="message"
-                                required />
-                        </div>
-                        <div className="send" id="send">
-                            <div className="text">
-                                <i className="fa-solid fa-bold"></i>
-                                <i className="fa-solid fa-italic"></i>
+                    {
+                        sevenDaysActive
+                        ?
+                        <form className="mt-2">
+                            <div className="form-group">
+                                <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
+                                    className="form-control mb-2" placeholder="Send a reply" id="message"
+                                    required />
                             </div>
-                            <div className="btn">
-                                <a href="javascript:void(0);" onClick={ () => setReplying(false) }>Cancel</a>
-                                <button onClick={thoughts.length >= 1 ? handleReply : null} type="button" className="send-btn">{submitText}</button>
+                            <div className="send" id="send">
+                                <div className="text">
+                                    <i className="fa-solid fa-bold"></i>
+                                    <i className="fa-solid fa-italic"></i>
+                                </div>
+                                <div className="btn">
+                                    <a href="javascript:void(0);" onClick={ () => setReplying(false) }>Cancel</a>
+                                    <button onClick={thoughts.length >= 1 ? handleReply : null} type="button" className="send-btn">{submitText}</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                        :
+                        null
+                    }
                 </div>
                 :
                 null

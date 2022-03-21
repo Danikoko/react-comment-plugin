@@ -68,6 +68,14 @@ function Post({setUser, user}) {
         return result;
     }, [post, comments]);
 
+    const sevenDaysActive = useMemo(() => {
+        if ((new Date().getTime() - new Date(user.created_at).getTime()) >= 604800000) {
+            return true;
+        } else {
+            return false
+        }
+    }, [user]);
+
     const handleLogout = () => {
         localStorage.setItem('user', null)
         setUser(null);
@@ -105,23 +113,29 @@ function Post({setUser, user}) {
                                                 <div className="profile"></div> <span>{ user.name }</span>
                                             </div>
                                         </div>
-                                        <form className="mt-2">
-                                            <div className="form-group">
-                                                <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
-                                                    className="form-control mb-2" placeholder="Share your thoughts" id="message"
-                                                    required />
-                                            </div>
-                                            <div className="send" id="send">
-                                                <div className="text">
-                                                    <i className="fa-solid fa-bold"></i>
-                                                    <i className="fa-solid fa-italic"></i>
+                                        {
+                                            sevenDaysActive
+                                            ?
+                                            <form className="mt-2">
+                                                <div className="form-group">
+                                                    <input value={thoughts} style={ {width:'350px',border:'none'} } onChange={handleInput} autoComplete="off"
+                                                        className="form-control mb-2" placeholder="Share your thoughts" id="message"
+                                                        required />
                                                 </div>
-                                                <div className="btn">
-                                                    <a href="javascript:void(0);" onClick={handleCancel}>Cancel</a>
-                                                    <button onClick={thoughts.length >= 1 ? handleSubmit : null} type="button" className="send-btn">{submitText}</button>
+                                                <div className="send" id="send">
+                                                    <div className="text">
+                                                        <i className="fa-solid fa-bold"></i>
+                                                        <i className="fa-solid fa-italic"></i>
+                                                    </div>
+                                                    <div className="btn">
+                                                        <a href="javascript:void(0);" onClick={handleCancel}>Cancel</a>
+                                                        <button onClick={thoughts.length >= 1 ? handleSubmit : null} type="button" className="send-btn">{submitText}</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </form>
+                                            </form>
+                                            :
+                                            null
+                                        }
                                     </div>
                                     <input type="checkbox" /> Also publish to my profile<br />
                                 </div>
